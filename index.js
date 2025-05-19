@@ -4,13 +4,15 @@ import mongoose from 'mongoose';
 import { Book } from './models/bookModel.js';
 import booksRoute from './routes/bookRoutes.js';
 import cors from 'cors';
+import dotenv from 'dotenv';
+dotenv.config();
 
 const app = express();
 
 app.use(express.json());
 
 app.use(cors({
-    origin: "http://localhost:5173", // or '*', for all
+    origin: process.env.FRONTEND_URL, // or '*', for all
     method: ['GET', 'POST', 'PUT', 'DELETE'],
     allowedHeaders: ['Content-Type'],
   }));
@@ -21,9 +23,9 @@ app.get('/', (req, res)=>{
 
 app.use('/books', booksRoute);
 
-mongoose.connect(mongoDBURL).then(()=>{
+mongoose.connect(process.env.MONGO_URL).then(()=>{
     console.log('app connected to database');
-    app.listen(PORT, () => {
+    app.listen(process.env.PORT, () => {
         console.log(`App is listening to port ${PORT}`);
     });
 }).catch((err)=>{
